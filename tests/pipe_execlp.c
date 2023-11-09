@@ -7,9 +7,10 @@
 
 int main(int ac, char *av[], char *envp[])
 {
-	int pid;
+	pid_t pid;
 	char *str[] = {"/bin/bash", "-c", "ls", NULL};
-	char *str1[] = {"/bin/bash", "-c", "grep p", NULL};
+	char *str1[] = {"wc", "-l", NULL};
+	// char *str1[] = {"/bin/bash", "-c", "grep p", NULL};
 	int fd[2];
 
 	pipe(fd);
@@ -23,14 +24,14 @@ int main(int ac, char *av[], char *envp[])
 		execve("/bin/bash", str, envp);
 	}
 	
-	int pid1 = fork();
+	pid_t pid1 = fork();
 
 	if (pid1 == 0)
 	{
 		dup2(fd[0], STDIN_FILENO);
 		close (fd[0]);
 		close (fd[1]);
-		execve("/bin/bash", str1, envp);
+		execve("/bin/wc", str1, envp);
 	}
 	close (fd[0]);
 	close (fd[1]);
