@@ -23,17 +23,17 @@ static char	*path_access(char *path, char *cmd)
 	if (!path_split)
 		return (NULL);
 	j = 0;
-	while(path_split[j])
+	while (path_split[j])
 	{
 		tmp = ft_strjoin(path_split[j], "/");
 		if (!tmp)
-			return(free_split(path_split), NULL);
+			return (free_split(path_split), NULL);
 		path = ft_strjoin(tmp, cmd);
 		free(tmp);
 		if (!path)
-			return(free_split(path_split), NULL);
+			return (free_split(path_split), NULL);
 		if (!access(path, F_OK))
-			return(free_split(path_split), path);
+			return (free_split(path_split), path);
 		free(path);
 		j++;
 	}
@@ -47,7 +47,7 @@ char	*path_finder(char *envp[], char *cmd)
 	int		i;
 
 	i = 0;
-	while(envp[i])
+	while (envp[i])
 	{
 		path = ft_strnstr(envp[i], "PATH", 4);
 		if (path)
