@@ -18,15 +18,18 @@ static int	child_proc(int *fd, char *av[], char *envp[], int arg)
 	int		file;
 
 
+	// dup2(fd[1], STDOUT_FILENO);
+	// // dup2(file, STDIN_FILENO);
+	// close (fd[0]);
+	// close (fd[1]);
+	// // close (file);
 	dup2(fd[1], STDOUT_FILENO);
-	// dup2(file, STDIN_FILENO);
-	close (fd[0]);
-	close (fd[1]);
-	// close (file);
 	cmds = cmd_seperate(av, FIRST_CMD + arg);
 	if (!cmds)
 		return (0);
 	path = path_finder(envp, cmds[0]);
+	
+
 	if (!path)
 	{
 		perror(strerror(errno));
@@ -50,7 +53,7 @@ static int	parent_proc(int *fd, int ac, char *av[], char *envp[])
 	close (fd[0]);
 	close (fd[1]);
 	close (file);
-	cmds = cmd_seperate(av, FIRST_CMD + 1);
+	cmds = cmd_seperate(av, ac - 4);
 	if (!cmds)
 		return (0);
 	path = path_finder(envp, cmds[0]);
@@ -71,21 +74,38 @@ int	main(int ac, char *av[], char *envp[])
 	int		file;
 	int		i;
 
-	if (pipe(fd) == -1)
-		return (0);
 	file = open(av[1], O_RDONLY, 0777);
 	if (file == -1)
 		return (perror(strerror(errno)), 0);
 	dup2(file, STDIN_FILENO);
-	close  (file);
-	i = ac - 5;
-	while (i >= 0)
-	{
-		if (pid == 0)
-			child_proc(fd, av, envp, ac - 5 -i);
-		i--;
-	}
+	if (pipe(fd) == -1)
+		return (0);
+	// dup2(fd[1], STDOUT_FILENO);
+	close (file);
+	// close (fd[0]);
+	// close (fd[1]);
+	pid = fork();
+	dup2(fd[0], STDIN_FILENO);
+
+	if (pid == 0)
+		child_proc(fd, av, envp, 0);
 	if (waitpid(pid, NULL, 0) < 1)
+		return (0);
+
+	if (pipe(fd) == -1)
+		return (0);
+	// dup2(fd[1], STDOUT_FILENO);
+	close (fd[0]);
+	close (fd[1]);
+	pid = fork();
+	dup2(fd[0], STDIN_FILENO);
+	if (pid == 0)
+		child_proc(fd, av, envp, 1);
+	if (waitpid(pid, NULL, 0) < 1)
+		return (0);
+	dup2(fd[0], STDIN_FILENO);
+	
+	if (pipe(fd) == -1)
 		return (0);
 	parent_proc(fd, ac, av, envp);
 	close (fd[0]);
