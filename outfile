@@ -1,6 +1,1 @@
-WRITE(1)                                                      User Commands                                                     WRITE(1)
-       You can prevent people (other than the superuser) from writing to you with the mesg(1) command. Some commands, for example
-       nroff(1) and pr(1), may automatically disallow writing, so that the output they produce isn’t overwritten.
-       mesg(1), talk(1), who(1)
-util-linux 2.37.2                                              2021-06-02                                                       WRITE(1)
-1
+67
