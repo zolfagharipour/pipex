@@ -45,16 +45,14 @@ int	main(int ac, char *av[], char *envp[])
 	i = 0;
 	if (pipe(fd) == -1)
 		return (0);
-	close (fd[0]);
-	fd[0] = open(av[1], O_RDONLY, 0777);
-	dup2(fd[0], STDIN_FILENO);
+	file = open(av[1], O_RDONLY, 0777);
+	dup2(file, STDIN_FILENO);
 	while (i < ac - 4)
 	{
 		pid = fork();
 		if (pid == 0)
 			child_proc(fd, av, envp, i);
 		close (fd[1]);
-
 		dup2(fd[0], STDIN_FILENO);
 		if (pipe(fd) == -1)
 			return (0);		

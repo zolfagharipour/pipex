@@ -1,2 +1,15 @@
-Hello mohamad!
-the world is great!
+total 1640$
+-rwxrwxr-x 1 mohamad mohamad   16232 Nov  9 19:03 a.out$
+-rw-rw-r-- 1 mohamad mohamad 1586470 Nov  9 13:46 en.subject.pdf$
+-rw-rw-r-- 1 mohamad mohamad      64 Nov 13 22:28 infile$
+drwxrwxr-x 4 mohamad mohamad    4096 Nov 21 20:27 libft$
+-rw-rw-r-- 1 mohamad mohamad     553 Nov  9 21:45 Makefile$
+-rwxrwxrwx 1 mohamad mohamad       0 Nov 23 13:28 outfile$
+-rw-rw-r-- 1 mohamad mohamad     867 Nov 13 20:20 paths.c$
+-rw-rw-r-- 1 mohamad mohamad    6232 Nov 21 20:27 paths.o$
+-rwxrwxr-x 1 mohamad mohamad   21192 Nov 23 13:28 pipex$
+-rw-rw-r-- 1 mohamad mohamad    1250 Nov 23 13:28 pipex.c$
+-rw-rw-r-- 1 mohamad mohamad     333 Nov 13 19:35 pipex.h$
+-rw-rw-r-- 1 mohamad mohamad    7760 Nov 23 13:28 pipex.o$
+-rw-rw-r-- 1 mohamad mohamad    1575 Nov 13 20:41 pipexORIG.c$
+drwxrwxr-x 2 mohamad mohamad    4096 Nov 13 19:39 tests$
