@@ -1,11 +1,12 @@
 
 NAME = pipex
-CHECK = checker
 
 SRCS =  pipex.c \
 		paths.c \
 
-BONUS = 
+BONUS = pipex_bonus.c \
+		ft_here_doc.c \
+		paths.c
 
 OBJS = ${SRCS:.c=.o}
 BONUS_OBJS = ${BONUS:.c=.o}
@@ -23,7 +24,7 @@ ${NAME}: ${OBJS}
 
 bonus: ${BONUS_OBJS}
 	make --no-print-directory -C ./libft
-	${CC} ${CFLAGS} -o ${CHECK} $^ ./libft/libft.a
+	${CC} ${CFLAGS} -o ${NAME} $^ ./libft/libft.a
 
 clean: 
 	make --no-print-directory -C ./libft fclean

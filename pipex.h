@@ -15,5 +15,7 @@
 
 char	*path_finder(char *envp[], char *cmd);
 void	free_split(char **ptr);
+int		ft_here_doc(int *i, int ac, char *av[], char *envp[]);
+
 
 #endif

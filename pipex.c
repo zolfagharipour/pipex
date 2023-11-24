@@ -11,16 +11,21 @@ static char	**cmd_seperate(char *av[], int i)
 	return (cmds);
 }
 
-static int	child_proc(int *fd,char *av[], char *envp[], int arg)
+static int	child_proc(int *fd, char *av[], char *envp[])
 {
 	char	**cmds;
 	char	*path;
+	int		file;
 
-	// dup2(fd[0], STDIN_FILENO);
+	file = open(av[1], O_RDONLY, 0777);
+	if (file == -1)
+		return (perror(strerror(errno)), 0);
 	dup2(fd[1], STDOUT_FILENO);
+	dup2(file, STDIN_FILENO);
 	close (fd[0]);
 	close (fd[1]);
-	cmds = cmd_seperate(av, FIRST_CMD + arg);
+	close (file);
+	cmds = cmd_seperate(av, FIRST_CMD);
 	if (!cmds)
 		return (0);
 	path = path_finder(envp, cmds[0]);
@@ -33,38 +38,49 @@ static int	child_proc(int *fd,char *av[], char *envp[], int arg)
 	return (free_split(cmds), 0);
 }
 
+static int	parent_proc(int *fd, int ac, char *av[], char *envp[])
+{
+	char	*path;
+	char	**cmds;
+	int		file;
+
+	file = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (file == -1)
+		return (perror(strerror(errno)), 0);
+	dup2(fd[0], STDIN_FILENO);
+	dup2(file, STDOUT_FILENO);
+	close (fd[0]);
+	close (fd[1]);
+	close (file);
+	cmds = cmd_seperate(av, FIRST_CMD + 1);
+	if (!cmds)
+		return (0);
+	path = path_finder(envp, cmds[0]);
+	if (!path)
+	{
+		perror(strerror(errno));
+		return (free_split(cmds), 0);
+	}
+	execve(path, cmds, envp);
+	return (free_split(cmds), 0);
+}
 
 int	main(int ac, char *av[], char *envp[])
 {
+	char	*pathname;
 	pid_t	pid;
 	int		fd[2];
-	int		fd_tmp;
-	int		file;
-	int		i;
 
-	i = 0;
 	if (pipe(fd) == -1)
 		return (0);
-	file = open(av[1], O_RDONLY, 0777);
-	dup2(file, STDIN_FILENO);
-	while (i < ac - 4)
-	{
-		pid = fork();
-		if (pid == 0)
-			child_proc(fd, av, envp, i);
-		close (fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-		if (pipe(fd) == -1)
-			return (0);		
-		i++;
-	}
-	close (fd[1]);
-	fd[1] = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	if (fd[1] == -1)
-		return (perror(strerror(errno)), 0);
 	pid = fork();
 	if (pid == 0)
-		child_proc(fd, av, envp, i);
+	{
+		child_proc(fd, av, envp);
+	}
+	if (waitpid(pid, NULL, 0) < 1)
+		return (0);
+	parent_proc(fd, ac, av, envp);
 	close (fd[0]);
 	close (fd[1]);
 }
