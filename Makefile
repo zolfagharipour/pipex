@@ -3,10 +3,12 @@ NAME = pipex
 
 SRCS =  pipex.c \
 		paths.c \
+		pipex_utils.c
 
 BONUS = pipex_bonus.c \
 		ft_here_doc.c \
-		paths.c
+		paths.c \
+		pipex_utils.c
 
 OBJS = ${SRCS:.c=.o}
 BONUS_OBJS = ${BONUS:.c=.o}

@@ -24,24 +24,7 @@ size_t	new_line(t_gnl *buff)
 	return (i + 1);
 }
 
-char	*ft_free(t_gnl *buff)
-{
-	char	*str;
-
-	str = (char *)malloc(sizeof(char) * buff->len + 1);
-	if (!str)
-	{
-		free(buff->buffer);
-		buff->buffer = NULL;
-		return (NULL);
-	}
-	ft_strlcpy(str, buff->buffer, buff->len + 1);
-	free(buff->buffer);
-	buff->buffer = NULL;
-	return (str);
-}
-
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+size_t	ft_strlcpy_gnl(char *dst, const char *src, size_t size)
 {
 	size_t	i;
 
@@ -59,6 +42,23 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	return (i);
 }
 
+char	*ft_free(t_gnl *buff)
+{
+	char	*str;
+
+	str = (char *)malloc(sizeof(char) * buff->len + 1);
+	if (!str)
+	{
+		free(buff->buffer);
+		buff->buffer = NULL;
+		return (NULL);
+	}
+	ft_strlcpy_gnl(str, buff->buffer, buff->len + 1);
+	free(buff->buffer);
+	buff->buffer = NULL;
+	return (str);
+}
+
 char	*ft_merge(t_gnl *buff, char *s2, int *i)
 {
 	char	*str;
@@ -70,8 +70,8 @@ char	*ft_merge(t_gnl *buff, char *s2, int *i)
 		*i = 0;
 		return (buff->buffer);
 	}
-	ft_strlcpy(str, buff->buffer, buff->len + 1);
-	ft_strlcpy(str + buff->len, s2, *i + 1);
+	ft_strlcpy_gnl(str, buff->buffer, buff->len + 1);
+	ft_strlcpy_gnl(str + buff->len, s2, *i + 1);
 	str[buff->len + *i] = '\0';
 	free(buff->buffer);
 	buff->buffer = NULL;

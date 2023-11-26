@@ -38,6 +38,7 @@ static char	*path_access(char *path, char *cmd)
 		j++;
 	}
 	free_split(path_split);
+	error_print(COMMAND, cmd);
 	return (NULL);
 }
 

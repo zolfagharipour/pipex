@@ -24,6 +24,7 @@
 # include <sys/types.h>
 # include <fcntl.h>
 # include <unistd.h>
+# include "../libft.h"
 
 typedef struct s_gnl{
 	size_t	len;
@@ -35,7 +36,7 @@ char	*ft_return(t_gnl *buff, size_t len);
 char	*ft_readfail(t_gnl *buff, int i);
 
 size_t	new_line(t_gnl *buff);
-size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+size_t	ft_strlcpy_gnl(char *dst, const char *src, size_t size);
 char	*ft_free(t_gnl *buff);
 char	*ft_merge(t_gnl *buff, char *s2, int *i);
 
