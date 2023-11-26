@@ -4,12 +4,12 @@ static int	file_open(int ac, char *av[])
 {
 	int	file;
 
-	file = open(av[1], O_RDONLY, 0777);
+	file = open(av[1], O_RDONLY);
 	if (file == -1)
-		exit (error_print(OPEN, av[1]));
+		exit (error_print(OPEN, av[0]));
 	dup2 (file, STDIN_FILENO);
 	close (file);
-	file = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	file = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if (file == -1)
 		exit (error_print(OPEN, av[ac -1]));
 	return (file);

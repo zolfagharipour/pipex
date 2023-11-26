@@ -15,7 +15,6 @@ int	error_print(int status, char *str)
 {
 	if (status == OPEN)
 	{
-		write(2, "bash: ", 6);
 		write(2, str, ft_strlen(str));
 		write(2, ": ", 2);
 		perror(NULL);

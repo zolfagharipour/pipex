@@ -32,7 +32,7 @@ static char	*path_access(char *path, char *cmd)
 		free(tmp);
 		if (!path)
 			return (free_split(path_split), NULL);
-		if (!access(path, F_OK))
+		if (!access(path, F_OK | X_OK))
 			return (free_split(path_split), path);
 		free(path);
 		j++;
@@ -51,6 +51,9 @@ char	*path_finder(char *envp[], char *cmd)
 	while (envp[i])
 	{
 		path = ft_strnstr(envp[i], "PATH", 4);
+
+		if (!access(cmd, F_OK | X_OK))
+			return (cmd);
 		if (path)
 			return (path_access(path, cmd));
 		i++;
