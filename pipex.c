@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mzolfagh <zolfagharipour@gmail.com>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/27 16:13:42 by mzolfagh          #+#    #+#             */
+/*   Updated: 2023/11/27 16:13:44 by mzolfagh         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
 static int	file_open(int ac, char *av[])
@@ -6,12 +18,12 @@ static int	file_open(int ac, char *av[])
 
 	file = open(av[1], O_RDONLY);
 	if (file == -1)
-		exit (error_print(OPEN, av[0]));
+		exit (error_print(OPEN, av[1], av[0] + 2));
 	dup2 (file, STDIN_FILENO);
 	close (file);
 	file = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if (file == -1)
-		exit (error_print(OPEN, av[ac -1]));
+		exit (error_print(OPEN, av[ac -1], av[0] + 2));
 	return (file);
 }
 
@@ -37,7 +49,7 @@ static int	child_proc(int *fd, char *av[], char *envp[], int arg)
 	exit(EXIT_FAILURE);
 }
 
-static int	proccess(int file, int ac, char *av[], char *envp[])
+static int	proccess(int file, char *av[], char *envp[])
 {
 	pid_t	pid;
 	int		fd[2];
@@ -63,7 +75,7 @@ static int	proccess(int file, int ac, char *av[], char *envp[])
 		child_proc(fd, av, envp, 1);
 	if (waitpid(pid, NULL, 0) == -1)
 		exit(EXIT_FAILURE);
-	(close (fd[0]), close (fd[1]));
+	return (close (fd[0]), close (fd[1]), EXIT_SUCCESS);
 }
 
 int	main(int ac, char *av[], char *envp[])
@@ -73,17 +85,17 @@ int	main(int ac, char *av[], char *envp[])
 	if (ac == 5)
 	{
 		file = file_open(ac, av);
-		if (proccess(file, ac, av, envp) == EXIT_FAILURE)
+		if (proccess(file, av, envp) == EXIT_FAILURE)
 			exit(EXIT_FAILURE);
 	}
 	else if (ac > 5)
 	{
-		error_print(ARG, "too many");
+		error_print(ARG, "too many", NULL);
 		exit (EXIT_FAILURE);
 	}
 	else
 	{
-		error_print(3, "not enough");
+		error_print(ARG, "not enough", NULL);
 		exit (EXIT_FAILURE);
 	}
 }

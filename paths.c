@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   paths.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mzolfagh <zolfagharipour@gmail.com>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/27 16:13:09 by mzolfagh          #+#    #+#             */
+/*   Updated: 2023/11/27 16:13:10 by mzolfagh         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
 void	free_split(char **ptr)
@@ -38,7 +50,7 @@ static char	*path_access(char *path, char *cmd)
 		j++;
 	}
 	free_split(path_split);
-	error_print(COMMAND, cmd);
+	error_print(COMMAND, cmd, NULL);
 	return (NULL);
 }
 
