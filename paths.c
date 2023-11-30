@@ -60,12 +60,11 @@ char	*path_finder(char *envp[], char *cmd)
 	int		i;
 
 	i = 0;
+	if (!access(cmd, F_OK | X_OK))
+		return (cmd);
 	while (envp[i])
 	{
 		path = ft_strnstr(envp[i], "PATH", 4);
-
-		if (!access(cmd, F_OK | X_OK))
-			return (cmd);
 		if (path)
 			return (path_access(path, cmd));
 		i++;

@@ -12,21 +12,6 @@
 
 #include "pipex.h"
 
-static int	file_open(int ac, char *av[])
-{
-	int	file;
-
-	file = open(av[1], O_RDONLY);
-	if (file == -1)
-		exit (error_print(OPEN, av[1], av[0] + 2));
-	dup2 (file, STDIN_FILENO);
-	close (file);
-	file = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0664);
-	if (file == -1)
-		exit (error_print(OPEN, av[ac -1], av[0] + 2));
-	return (file);
-}
-
 static int	child_proc(int *fd, char *av[], char *envp[], int arg)
 {
 	char	**cmds;
@@ -49,27 +34,46 @@ static int	child_proc(int *fd, char *av[], char *envp[], int arg)
 	exit(EXIT_FAILURE);
 }
 
-static int	proccess(int file, char *av[], char *envp[])
+static void	first_proc(char *av[], char **envp)
+{
+	int		file;
+	int		fd[2];
+	pid_t	pid;
+
+	file = open(av[1], O_RDONLY);
+	if (file == -1)
+	{
+		error_print(OPEN, av[1], av[0] + 2);
+		file = open ("/dev/null", O_RDONLY);
+		dup2 (file, STDIN_FILENO);
+		close (file);
+	}
+	else
+	{
+		dup2 (file, STDIN_FILENO);
+		close (file);
+		if (pipe(fd) == -1)
+			exit (EXIT_FAILURE);
+		pid = fork();
+		if (pid == 0)
+			child_proc(fd, av, envp, 0);
+		close (fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		close (fd[0]);
+	}
+}
+
+static int	second_proc(int ac, char *av[], char *envp[])
 {
 	pid_t	pid;
 	int		fd[2];
 
 	if (pipe(fd) == -1)
 		return (EXIT_FAILURE);
-	pid = fork();
-	if (pid == 0)
-	{
-		close (file);
-		if (!child_proc(fd, av, envp, 0))
-			exit (EXIT_FAILURE);
-	}
 	close (fd[1]);
-	dup2(fd[0], STDIN_FILENO);
-	close (fd[0]);
-	if (pipe(fd) == -1)
-		return (EXIT_FAILURE);
-	close (fd[1]);
-	fd[1] = file;
+	fd[1] = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	if (fd[1] == -1)
+		exit (error_print(OPEN, av[ac -1], av[0] + 2));
 	pid = fork();
 	if (pid == 0)
 		child_proc(fd, av, envp, 1);
@@ -80,12 +84,10 @@ static int	proccess(int file, char *av[], char *envp[])
 
 int	main(int ac, char *av[], char *envp[])
 {
-	int		file;
-
 	if (ac == 5)
 	{
-		file = file_open(ac, av);
-		if (proccess(file, av, envp) == EXIT_FAILURE)
+		first_proc(av, envp);
+		if (second_proc(ac, av, envp) == EXIT_FAILURE)
 			exit(EXIT_FAILURE);
 	}
 	else if (ac > 5)
