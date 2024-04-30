@@ -33,13 +33,6 @@ The behavior of `pipex` should mimic the following shell command:
 # This should behave like: < infile grep a1 | wc -w > outfile
 ```
 
-## Requirements
-
-- A Makefile that compiles the source files without relinking.
-- Thorough error handling. The program must not terminate unexpectedly due to errors like segmentation faults, bus errors, double frees, etc.
-- No memory leaks are allowed.
-- Errors should be handled similarly to shell commands (e.g., `< file1 cmd1 | cmd2 > file2`).
-
 ## Compilation
 
 ```
@@ -62,19 +55,19 @@ Standard operation:
    - Example:
      ```
      ./pipex infile "grep a1" "sort" "uniq -c" "wc -l" outfile
-     # Behaves like: < infile grep a1 | sort | uniq -c | wc -l > outfile
      ```
+     # Behaves like: < infile grep a1 | sort | uniq -c | wc -l > outfile
 
 2. **Support for Here Document:**
    - Command format when the first parameter is "here_doc":
      ```
      ./pipex here_doc LIMITER cmd cmd1 file
-     +++
+     ```
    - Example:
      ```
      ./pipex here_doc END "grep a1" "wc -w" outfile
-     # Behaves like: grep a1 << END | wc -w >> outfile
      ```
+     # Behaves like: grep a1 << END | wc -w >> outfile
 
 ## Error Handling
 
