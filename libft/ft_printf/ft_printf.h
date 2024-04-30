@@ -16,7 +16,8 @@
 # include <stdarg.h>
 # include "../libft.h"
 
-typedef struct s1_list {
+typedef struct s1_list
+{
 	va_list		*args;
 	const char	*str;
 	char		*substr;

@@ -26,7 +26,8 @@
 # include <unistd.h>
 # include "../libft.h"
 
-typedef struct s_gnl{
+typedef struct s_gnl
+{
 	size_t	len;
 	char	*buffer;
 }	t_gnl;

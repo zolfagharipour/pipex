@@ -27,11 +27,11 @@ static int	child_proc(int *fd, char *av[], char *envp[], int arg)
 		cmds = cmd_seperate(av, FIRST_CMD + arg);
 		if (!cmds)
 			exit (EXIT_FAILURE);
-		path = (envp, cmds[0]);
+		path = path_finder(envp, cmds[0]);
 		if (!path)
 		{
 			free_split(cmds);
-			return (EXIT_FAILURE);
+			exit (EXIT_FAILURE);
 		}
 		execve(path, cmds, envp);
 		free_split(cmds);
