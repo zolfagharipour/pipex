@@ -36,7 +36,7 @@ The behavior of `pipex` should mimic the following shell command:
 ## Compilation
 
 ```
-git clone https://github.com/yourusername/pipex.git
+git clone https://github.com/zolfagharipour/pipex.git
 cd pipex
 make
 ```
