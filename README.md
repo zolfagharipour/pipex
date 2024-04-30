@@ -56,7 +56,7 @@ Standard operation:
      ```
      ./pipex infile "grep a1" "sort" "uniq -c" "wc -l" outfile
      ```
-     # Behaves like: < infile grep a1 | sort | uniq -c | wc -l > outfile
+     Behaves like: < infile grep a1 | sort | uniq -c | wc -l > outfile
 
 2. **Support for Here Document:**
    - Command format when the first parameter is "here_doc":
@@ -67,7 +67,7 @@ Standard operation:
      ```
      ./pipex here_doc END "grep a1" "wc -w" outfile
      ```
-     # Behaves like: grep a1 << END | wc -w >> outfile
+     Behaves like: grep a1 << END | wc -w >> outfile
 
 ## Error Handling
 
